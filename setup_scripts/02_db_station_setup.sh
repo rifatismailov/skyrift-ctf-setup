@@ -28,15 +28,20 @@ apt-get install -y -qq \
     python3 \
     2>/dev/null || true
 
-# Add PostgreSQL 10 repo (Ubuntu 22.04 ships with 14; we need old version)
-curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg 2>/dev/null
+# Install PostgreSQL — try system package first, fallback to pgdg repo
+UBUNTU_VER=$(lsb_release -rs)
+echo "[*] Ubuntu version: $UBUNTU_VER"
 
-echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
-apt-get update -qq
-apt-get install -y -qq postgresql-10 2>/dev/null || {
-    echo "[!] PostgreSQL 10 not available in repo, trying 12 as fallback..."
-    apt-get install -y -qq postgresql-12 2>/dev/null || apt-get install -y -qq postgresql 2>/dev/null
+# Try default apt first (works on Ubuntu 20.04 and 22.04)
+apt-get install -y -qq postgresql 2>/dev/null || {
+    echo "[!] Trying pgdg repo..."
+    curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg 2>/dev/null
+    echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+    apt-get update -qq
+    apt-get install -y -qq postgresql 2>/dev/null
 }
+# Remove bad pgdg repo if it caused errors
+rm -f /etc/apt/sources.list.d/pgdg.list 2>/dev/null || true
 
 # Start PostgreSQL
 PG_VERSION=$(pg_lsclusters -h | awk '{print $1}' | head -1)
