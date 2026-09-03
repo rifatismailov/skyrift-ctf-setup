@@ -18,8 +18,13 @@ echo "[*] SkyRift — Operator_station setup starting..."
 echo "[*] Creating users..."
 
 # operator — CTF entry point
+# Group 'operator' may exist as system group — use -g if so, else create fresh
 if ! id operator &>/dev/null; then
-    useradd -m -s /bin/bash -c "Drone Operator, 1st UAV Squadron" operator
+    if getent group operator &>/dev/null; then
+        useradd -m -s /bin/bash -g operator -c "Drone Operator, 1st UAV Squadron" operator
+    else
+        useradd -m -s /bin/bash -c "Drone Operator, 1st UAV Squadron" operator
+    fi
 fi
 echo "operator:3edcVFR456" | chpasswd
 
