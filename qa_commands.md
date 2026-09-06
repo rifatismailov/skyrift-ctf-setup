@@ -1,10 +1,39 @@
 # QA Commands — SkyRift CTF
 
-## Operator_station — виправлення Flag_5
+## Operator_station — виправлення Flag_5 (перезаписати скрипт)
 
-Додати прапор у flight_log_export.py:
 ```
-sudo sed -i '/Usage: sudo -u commador/a # flag{Y0u_l1ke_privileges}' /opt/dronecorp/tools/flight_log_export.py
+cat > /opt/dronecorp/tools/flight_log_export.py << 'EOF'
+#!/usr/bin/env python3
+"""
+DroneCorp — Flight Log Export Utility v1.2
+Exports drone flight logs to the commander's export directory.
+Usage: sudo -u commador /opt/dronecorp/tools/flight_log_export.py
+
+# flag{Y0u_l1ke_privileges}
+"""
+import os
+import sys
+
+EXPORT_DIR = "/home/commador/exports"
+LOG_DIR = "/var/log/dronecorp"
+
+print("=== DroneCorp Flight Log Export Utility ===")
+print(f"Log source : {LOG_DIR}")
+print(f"Destination: {EXPORT_DIR}")
+print()
+
+log_name = input("Enter log filename to export (e.g. DRONE042_export.log): ").strip()
+
+if not log_name:
+    print("Error: no filename provided.")
+    sys.exit(1)
+
+cmd = f"cp {LOG_DIR}/{log_name} {EXPORT_DIR}/"
+print(f"[*] Running: {cmd}")
+os.system(cmd)
+print("[+] Export complete.")
+EOF
 ```
 
 Видалити старий flag.txt:
