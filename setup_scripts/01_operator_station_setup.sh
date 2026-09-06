@@ -807,6 +807,11 @@ apt-get install -y -qq \
     curl \
     python3 \
     python3-pip \
+    smbclient \
+    postgresql-client-14 \
+    ruby-full \
+    ruby-dev \
+    libreadline-dev \
     fuse \
     libgstreamer1.0-dev \
     gstreamer1.0-plugins-good \
@@ -815,6 +820,9 @@ apt-get install -y -qq \
     gstreamer1.0-libav \
     libqt5gui5 \
     2>/dev/null || true
+
+echo "[*] Installing evil-winrm..."
+gem install evil-winrm --no-document 2>/dev/null || true
 
 # Ensure SSH is running and operator can log in
 systemctl enable ssh 2>/dev/null || true
