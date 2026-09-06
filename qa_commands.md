@@ -261,3 +261,18 @@ os.system(cmd)
 print("[+] Export complete.")
 EOF
 ```
+
+---
+
+## Update Server — підключення (з Operator_station, вже в LAN)
+
+Credentials знайдені в реєстрі Windows Server:
+```
+reg query HKLM\SOFTWARE\DroneCorp\UpdateSync
+```
+
+Підключення (внутрішній IP, студент вже в LAN):
+```
+ssh grayraven@10.10.50.180
+```
+пароль: `grayraven124`

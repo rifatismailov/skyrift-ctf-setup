@@ -280,7 +280,7 @@ New-Item -Path "HKLM:\SOFTWARE\DroneCorp" -Force | Out-Null
 New-Item -Path $regPath -Force | Out-Null
 
 # Set the values
-New-ItemProperty -Path $regPath -Name "server_ip"    -Value "192.168.125.55" -PropertyType String -Force
+New-ItemProperty -Path $regPath -Name "server_ip"    -Value "10.10.50.180" -PropertyType String -Force
 New-ItemProperty -Path $regPath -Name "ssh_login"    -Value "grayraven"      -PropertyType String -Force
 New-ItemProperty -Path $regPath -Name "ssh_password" -Value "grayraven124"   -PropertyType String -Force
 New-ItemProperty -Path $regPath -Name "flag_final"   -Value "flag{f0und_th3_k3ys}" -PropertyType String -Force
@@ -296,7 +296,7 @@ $updateConfig = @"
 ; Last updated: 2026-07-10 by IT Department
 
 [UpdateServer]
-server_ip    = 192.168.125.55
+server_ip    = 10.10.50.180
 ssh_login    = grayraven
 ssh_password = grayraven124
 ssh_port     = 22
