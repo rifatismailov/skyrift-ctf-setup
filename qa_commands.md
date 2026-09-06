@@ -117,6 +117,20 @@ SELECT * FROM cmd_exec;
 
 ---
 
+## Windows Server — виправлення Flag_8 (перенести у deploy_update.ps1)
+
+Виконати на Windows Server (PowerShell як Administrator):
+```
+(Get-Content C:\DroneUpdates\deploy_update.ps1) -replace '# TODO: remove hardcoded password!', "# TODO: remove hardcoded password!`n# flag{sh4r3_1s_c4r3}" | Set-Content C:\DroneUpdates\deploy_update.ps1
+```
+
+Видалити окремий flag.txt:
+```
+Remove-Item C:\DroneUpdates\flag.txt
+```
+
+---
+
 ## Flag_8 — SMB анонімний доступ (з Kali)
 
 Встановити smbclient якщо нема:
