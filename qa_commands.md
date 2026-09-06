@@ -146,6 +146,13 @@ smbclient -L //10.10.50.150 -N
 smbclient //10.10.50.150/Updates -N
 ```
 
+Всередині smbclient:
+```
+ls
+get deploy_update.ps1
+exit
+```
+
 ---
 
 ## Flag_9+10 — Windows WinRM (з Operator_station, commador shell)
