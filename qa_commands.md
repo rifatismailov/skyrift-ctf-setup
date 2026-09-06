@@ -81,9 +81,18 @@ COPY cmd_exec FROM PROGRAM 'id';
 SELECT * FROM cmd_exec;
 ```
 
-Вийти:
+Знайти IP Windows Server (IT management) через БД:
+```
+SELECT DISTINCT managed_by FROM software_licenses;
+```
+→ показує `DroneCorp IT (10.10.50.150)`
+
+АБО network scan з Operator_station:
 ```
 \q
+```
+```
+nmap -sn 10.10.50.0/24
 ```
 
 ---
