@@ -86,6 +86,11 @@ cat /home/commador/scripts/backup_db.sh
 
 ## Flag_6+7 — PostgreSQL (з Kali або commador)
 
+Встановити psql якщо нема:
+```
+sudo apt install -y postgresql-client
+```
+
 Підключення:
 ```
 psql -h 10.10.50.100 -U tech2 -d dronecorp_db
