@@ -78,13 +78,7 @@ Write-Host "[+] SMB share 'Updates' configured at $shareDir" -ForegroundColor Gr
 # =============================================================================
 Write-Host "[*] Creating deploy script with hardcoded credentials..." -ForegroundColor Cyan
 
-# Flag_8 in the share
-$flag8 = @"
-flag{sh4r3_1s_c4r3}
-"@
-Set-Content -Path "$shareDir\flag.txt" -Value $flag8
-
-# The deploy script with hardcoded svc_deploy credentials
+# The deploy script with hardcoded svc_deploy credentials + Flag_8 embedded
 $deployScript = @'
 # =============================================================================
 # DroneCorp — Firmware Update Deployment Script
@@ -94,6 +88,8 @@ $deployScript = @'
 # =============================================================================
 # Distributes firmware updates to drone fleet endpoints.
 # Requires: svc_deploy service account with write access to drone workstations.
+# =============================================================================
+# flag{sh4r3_1s_c4r3}
 # =============================================================================
 
 param(
@@ -161,7 +157,7 @@ This share contains firmware packages for distribution to drone fleet workstatio
 Contents:
   deploy_update.ps1  — automated deployment script
   firmware\          — firmware binary packages
-  flag.txt           — (internal marker)
+  README.txt         — this file
 
 Access: svc_deploy account (contact IT helpdesk)
 Server: IT Department, 10.10.50.150
@@ -246,13 +242,26 @@ Write-Host "[*] Placing Flag_9 on Administrator Desktop..." -ForegroundColor Cya
 $adminDesktop = "C:\Users\Administrator\Desktop"
 New-Item -ItemType Directory -Path $adminDesktop -Force | Out-Null
 
-$flag9 = @"
-flag{unqu0ted_p4th_pwn}
+# Flag_9 embedded in admin_notes.txt (admin-only)
+$adminNotes = @"
+DroneCorp IT — Administrator Notes
+=====================================
+Server: Windows Update Server (10.10.50.150)
+Role: Firmware distribution & update orchestration
+
+Access log key: flag{unqu0ted_p4th_pwn}
+
+Pending tasks:
+- Migrate svc_deploy creds to vault (IT-2026-0034)
+- Review DroneUpdateAgent service path (unquoted — known issue)
+- Update firmware signing certificates (expires 2027-01)
+
+Contact: it-admin@dronecorp.internal
 "@
-Set-Content -Path "$adminDesktop\flag.txt" -Value $flag9
+Set-Content -Path "$adminDesktop\admin_notes.txt" -Value $adminNotes
 
 # Restrict to Administrator only
-$flag9Acl = Get-Acl "$adminDesktop\flag.txt"
+$flag9Acl = Get-Acl "$adminDesktop\admin_notes.txt"
 $flag9Acl.SetAccessRuleProtection($true, $false)
 $adminRule = New-Object System.Security.AccessControl.FileSystemAccessRule(
     "Administrator", "FullControl", "Allow"
@@ -266,9 +275,9 @@ $adminsRule = New-Object System.Security.AccessControl.FileSystemAccessRule(
 $flag9Acl.AddAccessRule($adminRule)
 $flag9Acl.AddAccessRule($systemRule)
 $flag9Acl.AddAccessRule($adminsRule)
-Set-Acl -Path "$adminDesktop\flag.txt" -AclObject $flag9Acl
+Set-Acl -Path "$adminDesktop\admin_notes.txt" -AclObject $flag9Acl
 
-Write-Host "[+] Flag_9 placed at $adminDesktop\flag.txt" -ForegroundColor Green
+Write-Host "[+] Flag_9 embedded in $adminDesktop\admin_notes.txt" -ForegroundColor Green
 
 # =============================================================================
 # 6. FLAG_10 + UPDATE SERVER CREDENTIALS — Registry (Admin-only)
@@ -436,8 +445,8 @@ Write-Host "============================================================" -Foreg
 Write-Host "[+] Windows Server 2019 setup COMPLETE." -ForegroundColor Green
 Write-Host ""
 Write-Host "    Share:  \\10.10.50.150\Updates  (anonymous/guest)" -ForegroundColor Cyan
-Write-Host "    Flag_8: \\10.10.50.150\Updates\flag.txt" -ForegroundColor Cyan
-Write-Host "    Flag_9: C:\Users\Administrator\Desktop\flag.txt" -ForegroundColor Cyan
+Write-Host "    Flag_8: \\10.10.50.150\Updates\deploy_update.ps1 (comment)" -ForegroundColor Cyan
+Write-Host "    Flag_9: C:\Users\Administrator\Desktop\admin_notes.txt" -ForegroundColor Cyan
 Write-Host "    Flag_10: HKLM\SOFTWARE\DroneCorp\UpdateSync" -ForegroundColor Cyan
 Write-Host "             C:\ProgramData\DroneOps\update_server.conf" -ForegroundColor Cyan
 Write-Host ""
