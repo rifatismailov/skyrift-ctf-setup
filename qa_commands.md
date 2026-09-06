@@ -88,7 +88,7 @@ cat /home/commador/scripts/backup_db.sh
 
 Встановити psql якщо нема:
 ```
-sudo apt install -y postgresql-client
+sudo apt-get install -f && sudo apt install -y postgresql-client-common
 ```
 
 Підключення:
