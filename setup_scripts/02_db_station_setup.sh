@@ -734,6 +734,25 @@ INSERT INTO software_licenses (product_name, vendor, license_key, license_type, 
 ('Ansible Tower',             'Red Hat',         'ANS-TWR-2025-T6U7-V8W9-X0Y1', 'Enterprise',   1, 'IT DevOps',            '2025-11-01','2027-11-01','DroneCorp IT (10.10.50.150)','Active',   NULL),
 ('Nagios XI',                 'Nagios Ent LLC',  'NAGXI-2025-Z2A3-B4C5-D6E7',   'Enterprise',   1, 'IT Infrastructure',    '2025-02-01','2027-02-01','DroneCorp IT (10.10.50.150)','Active',   'Server monitoring');
 
+-- ============================================================
+-- system_config — internal API keys and secrets (Flag_7 embedded)
+-- ============================================================
+CREATE TABLE system_config (
+    id          SERIAL PRIMARY KEY,
+    config_key  VARCHAR(64) NOT NULL UNIQUE,
+    config_val  TEXT        NOT NULL,
+    description TEXT,
+    updated_at  TIMESTAMP DEFAULT NOW()
+);
+
+INSERT INTO system_config (config_key, config_val, description) VALUES
+('telemetry_api_endpoint',  'https://telemetry.dronecorp.internal/api/v2',      'Primary telemetry ingest endpoint'),
+('telemetry_api_key',       'flag{0mg_RC3}',                                     'Telemetry service API key — rotate quarterly'),
+('db_backup_bucket',        's3://dronecorp-backups-prod/db/',                   'S3 bucket for nightly pg_dump'),
+('backup_encryption_pass',  'B4ckup$3cur3!2025',                                 'Passphrase for backup GPG encryption'),
+('alert_webhook_url',       'https://hooks.slack.dronecorp.internal/T0KEN',      'Slack alert webhook — ops channel'),
+('max_drone_session_sec',   '3600',                                               'Max telemetry session length in seconds'),
+('fleet_sync_interval_min', '15',                                                 'Fleet status sync interval');
 
 -- ============================================================
 -- Grant privileges to tech2 on all tables
@@ -766,24 +785,7 @@ echo "host    dronecorp_db    tech2    10.10.50.0/24    md5" >> "${PG_CONF_DIR}/
 systemctl restart postgresql
 
 # =============================================================================
-# 5. FLAG_7 — placed in postgres home directory
-# =============================================================================
-echo "[*] Placing Flag_7..."
-
-PG_HOME=$(getent passwd postgres | cut -d: -f6)
-cat > "${PG_HOME}/flag.txt" << 'EOF'
-flag{0mg_RC3}
-EOF
-chmod 644 "${PG_HOME}/flag.txt"
-chown postgres:postgres "${PG_HOME}/flag.txt"
-
-# Also place it in /var/lib/postgresql/ for visibility after reverse shell
-if [ -d /var/lib/postgresql ]; then
-    cp "${PG_HOME}/flag.txt" /var/lib/postgresql/flag.txt 2>/dev/null || true
-fi
-
-# =============================================================================
-# 6. LEGACY/ABANDONED ENVIRONMENT SETUP
+# 5. LEGACY/ABANDONED ENVIRONMENT SETUP
 # =============================================================================
 echo "[*] Creating legacy environment..."
 

