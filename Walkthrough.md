@@ -249,11 +249,6 @@ sudo apt install -y libreadline-dev ruby-dev ruby-full && sudo gem install evil-
 evil-winrm -i 10.10.50.150 -u svc_deploy -p 'Deploy@2024!Drone'
 ```
 
-**Всередині evil-winrm — знайти вразливий сервіс:**
-```powershell
-sc.exe qc DroneUpdateAgent
-```
-
 **Прочитати admin notes — флаг там:**
 ```powershell
 type C:\ProgramData\DroneOps\admin_notes.txt
