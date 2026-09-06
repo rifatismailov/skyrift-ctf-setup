@@ -50,6 +50,12 @@ cat /opt/dronecorp/tools/flight_log_export.py
 
 ## Flag_4 — SSH вхід (з Kali)
 
+Якщо помилка "known_hosts" — спочатку:
+```
+ssh-keygen -f "/home/rangeadmin/.ssh/known_hosts" -R "192.168.125.55"
+```
+
+Підключення:
 ```
 ssh -o HostKeyAlgorithms=+ssh-rsa operator@192.168.125.55
 ```
