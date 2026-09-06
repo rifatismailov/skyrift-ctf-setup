@@ -158,6 +158,41 @@ reg query HKLM\SOFTWARE\DroneCorp\UpdateSync
 
 ---
 
+## Windows Server — виправлення Flag_9 на живому сервері (PowerShell як Administrator)
+
+```
+New-Item -ItemType Directory -Path "C:\ProgramData\DroneOps" -Force
+```
+
+```
+@"
+DroneCorp IT Operations — Admin Notes
+======================================
+Server: Windows Update Server (10.10.50.150)
+Role: Firmware distribution & update orchestration
+
+[!] SECURITY ISSUE — unquoted service path detected
+Service: DroneUpdateAgent
+Path: C:\Program Files\Drone Corp\Update Agent\DroneUpdateAgent.exe
+Fix pending. Do NOT restart service until patched.
+
+Access log key: flag{unqu0ted_p4th_pwn}
+
+Pending tasks:
+- Migrate svc_deploy creds to vault (IT-2026-0034)
+- Review DroneUpdateAgent service path (unquoted — known issue)
+- Update firmware signing certificates (expires 2027-01)
+
+Contact: it-admin@dronecorp.internal
+"@ | Set-Content "C:\ProgramData\DroneOps\admin_notes.txt"
+```
+
+```
+icacls "C:\ProgramData\DroneOps\admin_notes.txt" /grant "Everyone:(R)"
+```
+
+---
+
 ## Windows Server — ручне налаштування (якщо не запускався скрипт)
 
 Виконати на Windows Server (PowerShell як Administrator):
