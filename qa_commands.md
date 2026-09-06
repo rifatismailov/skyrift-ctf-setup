@@ -180,6 +180,11 @@ sudo apt install -y libreadline-dev ruby-dev ruby-full && sudo gem install evil-
 evil-winrm -i 10.10.50.150 -u svc_deploy -p 'Deploy@2024!Drone'
 ```
 
+Якщо evil-winrm не знайдено — через Python wmiexec:
+```
+python3 /usr/share/doc/python3-impacket/examples/wmiexec.py svc_deploy:'Deploy@2024!Drone'@10.10.50.150
+```
+
 АБО через impacket (якщо evil-winrm не встановився):
 
 Встановити impacket:
