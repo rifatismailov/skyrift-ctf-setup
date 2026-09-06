@@ -156,6 +156,18 @@ exit
 
 ---
 
+## Windows Server — увімкнути WinRM (PowerShell як Administrator на Windows Server)
+
+```
+winrm quickconfig -force
+```
+
+```
+netsh advfirewall firewall add rule name="WinRM" dir=in action=allow protocol=TCP localport=5985
+```
+
+---
+
 ## Flag_9+10 — Windows WinRM (з Operator_station, commador shell)
 
 Встановити evil-winrm якщо нема:
