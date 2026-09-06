@@ -172,7 +172,12 @@ evil-winrm -i 10.10.50.150 -u svc_deploy -p 'Deploy@2024!Drone'
 
 Встановити impacket:
 ```
-sudo apt install -y python3-impacket
+sudo pip3 install impacket
+```
+
+Знайти psexec.py якщо вже встановлено:
+```
+find / -name "psexec.py" 2>/dev/null
 ```
 
 ```
