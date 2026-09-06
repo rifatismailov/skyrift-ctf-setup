@@ -235,19 +235,25 @@ Write-Host "    Path: C:\Program Files\Drone Update Agent\agent.exe" -Foreground
 Write-Host "    Attack vector: drop malicious C:\Program Files\Drone.exe" -ForegroundColor Yellow
 
 # =============================================================================
-# 5. FLAG_9 — Administrator Desktop
+# 5. FLAG_9 — ProgramData\DroneOps (readable by any authenticated user)
 # =============================================================================
-Write-Host "[*] Placing Flag_9 on Administrator Desktop..." -ForegroundColor Cyan
+Write-Host "[*] Placing Flag_9 in ProgramData\DroneOps..." -ForegroundColor Cyan
 
-$adminDesktop = "C:\Users\Administrator\Desktop"
-New-Item -ItemType Directory -Path $adminDesktop -Force | Out-Null
+$droneOpsDir = "C:\ProgramData\DroneOps"
+New-Item -ItemType Directory -Path $droneOpsDir -Force | Out-Null
 
-# Flag_9 embedded in admin_notes.txt (admin-only)
+# Flag_9 embedded in admin_notes.txt — readable without admin privs
+# Student finds it after discovering unquoted service path via sc.exe qc
 $adminNotes = @"
-DroneCorp IT — Administrator Notes
-=====================================
+DroneCorp IT Operations — Admin Notes
+======================================
 Server: Windows Update Server (10.10.50.150)
 Role: Firmware distribution & update orchestration
+
+[!] SECURITY ISSUE — unquoted service path detected
+Service: DroneUpdateAgent
+Path: C:\Program Files\Drone Corp\Update Agent\DroneUpdateAgent.exe
+Fix pending. Do NOT restart service until patched.
 
 Access log key: flag{unqu0ted_p4th_pwn}
 
@@ -258,26 +264,10 @@ Pending tasks:
 
 Contact: it-admin@dronecorp.internal
 "@
-Set-Content -Path "$adminDesktop\admin_notes.txt" -Value $adminNotes
+Set-Content -Path "$droneOpsDir\admin_notes.txt" -Value $adminNotes
+icacls "$droneOpsDir\admin_notes.txt" /grant "Everyone:(R)" | Out-Null
 
-# Restrict to Administrator only
-$flag9Acl = Get-Acl "$adminDesktop\admin_notes.txt"
-$flag9Acl.SetAccessRuleProtection($true, $false)
-$adminRule = New-Object System.Security.AccessControl.FileSystemAccessRule(
-    "Administrator", "FullControl", "Allow"
-)
-$systemRule = New-Object System.Security.AccessControl.FileSystemAccessRule(
-    "SYSTEM", "FullControl", "Allow"
-)
-$adminsRule = New-Object System.Security.AccessControl.FileSystemAccessRule(
-    "Administrators", "FullControl", "Allow"
-)
-$flag9Acl.AddAccessRule($adminRule)
-$flag9Acl.AddAccessRule($systemRule)
-$flag9Acl.AddAccessRule($adminsRule)
-Set-Acl -Path "$adminDesktop\admin_notes.txt" -AclObject $flag9Acl
-
-Write-Host "[+] Flag_9 embedded in $adminDesktop\admin_notes.txt" -ForegroundColor Green
+Write-Host "[+] Flag_9 embedded in $droneOpsDir\admin_notes.txt" -ForegroundColor Green
 
 # =============================================================================
 # 6. FLAG_10 + UPDATE SERVER CREDENTIALS — Registry (Admin-only)
@@ -446,7 +436,7 @@ Write-Host "[+] Windows Server 2019 setup COMPLETE." -ForegroundColor Green
 Write-Host ""
 Write-Host "    Share:  \\10.10.50.150\Updates  (anonymous/guest)" -ForegroundColor Cyan
 Write-Host "    Flag_8: \\10.10.50.150\Updates\deploy_update.ps1 (comment)" -ForegroundColor Cyan
-Write-Host "    Flag_9: C:\Users\Administrator\Desktop\admin_notes.txt" -ForegroundColor Cyan
+    Write-Host "    Flag_9: C:\\ProgramData\\DroneOps\\admin_notes.txt (readable by all)" -ForegroundColor Cyan
 Write-Host "    Flag_10: HKLM\SOFTWARE\DroneCorp\UpdateSync" -ForegroundColor Cyan
 Write-Host "             C:\ProgramData\DroneOps\update_server.conf" -ForegroundColor Cyan
 Write-Host ""
