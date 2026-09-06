@@ -149,6 +149,7 @@ smbclient //10.10.50.150/Updates -N
 Всередині smbclient:
 ```
 ls
+lcd /tmp
 get deploy_update.ps1
 exit
 ```
