@@ -160,7 +160,7 @@ exit
 
 Встановити evil-winrm якщо нема:
 ```
-sudo gem install evil-winrm
+sudo apt install -y ruby-full && sudo gem install evil-winrm
 ```
 
 ```
