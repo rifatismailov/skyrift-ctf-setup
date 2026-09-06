@@ -188,7 +188,7 @@ sudo pip3 install pywinrm
 ```
 cat > /tmp/win.py << 'EOF'
 import winrm
-s = winrm.Session('http://10.10.50.150:5985/wsman', auth=('svc_deploy', 'Deploy@2024!Drone'))
+s = winrm.Session('http://10.10.50.150:5985/wsman', auth=('svc_deploy', 'Deploy@2024!Drone'), transport='ntlm')
 r = s.run_cmd('whoami')
 print(r.std_out.decode())
 EOF
