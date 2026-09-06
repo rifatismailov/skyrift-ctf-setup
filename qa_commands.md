@@ -119,6 +119,11 @@ SELECT * FROM cmd_exec;
 
 ## Flag_8 — SMB анонімний доступ (з Kali)
 
+Встановити smbclient якщо нема:
+```
+sudo apt install -y smbclient
+```
+
 ```
 smbclient -L //10.10.50.150 -N
 ```
