@@ -15,6 +15,10 @@ cat ~/flag.txt
 # Перевірити sudo права
 sudo -l
 
+# Додати Flag_5 у flight_log_export.py (виконати один раз на VM)
+sudo sed -i '/Usage: sudo -u commador/a # flag{Y0u_l1ke_privileges}' /opt/dronecorp/tools/flight_log_export.py
+sudo rm -f /home/commador/flag.txt
+
 # Знайти Flag_5 — читай вразливий скрипт (flag у docstring)
 cat /opt/dronecorp/tools/flight_log_export.py
 
