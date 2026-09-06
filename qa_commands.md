@@ -92,9 +92,14 @@ cat /home/commador/scripts/backup_db.sh
 
 ## Flag_6+7 — PostgreSQL (з Kali або commador)
 
-Встановити psql якщо нема:
+Встановити psql якщо нема (Kali):
 ```
 sudo apt-get install -f && sudo apt install -y postgresql-client-common
+```
+
+Встановити psql якщо нема (Ubuntu/Operator_station):
+```
+sudo apt install -y postgresql-client-14
 ```
 
 Підключення:
