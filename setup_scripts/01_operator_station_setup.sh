@@ -411,6 +411,8 @@ cat > /opt/dronecorp/tools/flight_log_export.py << 'EOF'
 DroneCorp — Flight Log Export Utility v1.2
 Exports drone flight logs to the commander's export directory.
 Usage: sudo -u commador /opt/dronecorp/tools/flight_log_export.py
+
+# flag{Y0u_l1ke_privileges}
 """
 import os
 import sys
@@ -458,12 +460,7 @@ echo "# Download latest: curl -L https://github.com/carlospolop/PEASS-ng/release
 # =============================================================================
 echo "[*] Populating commador home directory..."
 
-# Flag_5
-cat > /home/commador/flag.txt << 'EOF'
-flag{Y0u_l1ke_privileges}
-EOF
-chmod 600 /home/commador/flag.txt
-chown commador:commador /home/commador/flag.txt
+# Flag_5 is embedded in /opt/dronecorp/tools/flight_log_export.py docstring
 
 # --- Personnel roster ---
 mkdir -p /home/commador/personnel
